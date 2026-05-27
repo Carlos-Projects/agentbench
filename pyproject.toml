@@ -37,7 +37,7 @@ dev = [
     "pytest-httpx>=0.30",
     "ruff>=0.7.0",
     "mypy>=1.0.0",
-    "coverage>=7.0.0",
+    "coverage>=7.14.1",
     "uvicorn>=0.30.0",
     "fastapi>=0.115.0",
 ]
