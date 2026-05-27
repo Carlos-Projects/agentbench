@@ -3,7 +3,7 @@ Installation
 
 .. code-block:: bash
 
-   pip install agentbench
+   pip install agentbench-ai
 
 Or from source:
 

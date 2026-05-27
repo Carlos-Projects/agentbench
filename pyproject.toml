@@ -1,5 +1,5 @@
 [project]
-name = "agentbench"
+name = "agentbench-ai"
 version = "0.2.0-dev"
 description = "Automated benchmarking framework for evaluating AI agent security"
 keywords = ["mcp", "security", "benchmark", "ai-security", "testing", "agent"]
@@ -46,7 +46,7 @@ dev = [
 agentbench = "agentbench.cli:app"
 
 [project.urls]
-Homepage = "https://github.com/Carlos-Projects/agentbench"
+Homepage = "https://pypi.org/project/agentbench-ai/"
 Repository = "https://github.com/Carlos-Projects/agentbench"
 Documentation = "https://agentbench.readthedocs.io"
 
