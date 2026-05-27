@@ -1,10 +1,9 @@
 # AgentBench
 
 [![CI](https://github.com/Carlos-Projects/agentbench/actions/workflows/ci.yml/badge.svg)](https://github.com/Carlos-Projects/agentbench/actions/workflows/ci.yml)
-[![PyPI version](https://img.shields.io/pypi/v/agentbench-ai)](https://pypi.org/project/agentbench-ai/)
-[![Python versions](https://img.shields.io/pypi/pyversions/agentbench-ai)](https://pypi.org/project/agentbench-ai/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Ruff](https://img.shields.io/badge/code%20style-ruff-000000.svg)](https://github.com/astral-sh/ruff)
+[![Python 3.11+](https://img.shields.io/badge/python-3.11+-blue.svg)](https://python.org)
 
 Automated benchmarking framework for evaluating AI agent security.
 
@@ -28,14 +27,14 @@ attacks), AgentBench focuses on standardized, repeatable benchmarking.
 ## Installation
 
 ```bash
-pip install agentbench-ai
-```
-
-For development:
-
-```bash
 git clone https://github.com/Carlos-Projects/agentbench.git
 cd agentbench
+pip install -e .
+```
+
+For development (includes test/lint dependencies):
+
+```bash
 pip install -e ".[dev]"
 ```
 

@@ -3,12 +3,12 @@ Installation
 
 .. code-block:: bash
 
-   pip install agentbench-ai
+   git clone https://github.com/Carlos-Projects/agentbench.git
+   cd agentbench
+   pip install -e .
 
-Or from source:
+Or for development (includes test/lint dependencies):
 
 .. code-block:: bash
 
-   git clone https://github.com/Carlos-Projects/agentbench.git
-   cd agentbench
    pip install -e ".[dev]"
