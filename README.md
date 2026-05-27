@@ -4,6 +4,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Ruff](https://img.shields.io/badge/code%20style-ruff-000000.svg)](https://github.com/astral-sh/ruff)
 [![Python 3.11+](https://img.shields.io/badge/python-3.11+-blue.svg)](https://python.org)
+[![Coverage](https://img.shields.io/badge/coverage-86%25-brightgreen.svg)](https://github.com/Carlos-Projects/agentbench/actions)
 
 Automated benchmarking framework for evaluating AI agent security.
 
@@ -56,6 +57,40 @@ Save reports:
 
 ```bash
 agentbench run http://localhost:8080 --output results.json --html report.html
+```
+
+### Example Output
+
+```bash
+$ agentbench info
+AgentBench v0.2.0-dev
+  Python: 3.13.9 | Platform: macOS-arm64
+
+Suites: 8 built-in (64 test cases)
+  prompt_injection   → 8 tests
+  tool_poisoning     → 8 tests
+  ssrf               → 8 tests
+  data_exfiltration  → 8 tests
+  jailbreak          → 8 tests
+  memory_attacks     → 8 tests
+  multi_agent        → 8 tests
+  mcp_attack         → 8 tests
+
+Output formats: console, JSON, HTML, Markdown, SARIF, MCPGuard, MCPscop
+API formats: generic, openai, anthropic, mcp
+```
+
+```bash
+$ agentbench suite --list
+Available Benchmark Suites:
+  prompt_injection    Tests agent resistance to prompt injection attacks
+  tool_poisoning      Tests agent resistance to tool poisoning
+  ssrf                Tests agent resistance to SSRF attacks
+  data_exfiltration   Tests agent resistance to data exfiltration
+  jailbreak           Tests agent resistance to jailbreak techniques
+  memory_attacks      Tests agent resistance to memory poisoning
+  multi_agent         Tests agent security in multi-agent scenarios
+  mcp_attack          Tests MCP protocol-level security
 ```
 
 ## Commands
