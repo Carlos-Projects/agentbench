@@ -1,0 +1,30 @@
+# AgentBench benchmark configuration
+agent_id: my-agent
+agent_version: "1.0.0"
+target: http://localhost:8080
+timeout: 30.0
+api_format: generic  # generic, openai, or mcp
+rate_limit: 0.5      # seconds between requests
+parallel: 1          # concurrent requests
+seed: 42             # reproducibility
+
+suites:
+  - prompt_injection
+  - tool_poisoning
+  - ssrf
+  - data_exfiltration
+  - jailbreak
+  - memory_attacks
+  - multi_agent
+
+headers:
+  Content-Type: application/json
+  Authorization: ""  # set via env or CLI
+
+output:
+  json: results.json
+  html: report.html
+  markdown: report.md
+  sarif: report.sarif
+  mcpguard: mcpguard-policy.yaml
+  mcpscop: mcpscop-events.json

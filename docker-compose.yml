@@ -1,0 +1,31 @@
+version: "3.9"
+
+services:
+  agentbench:
+    build: .
+    command: run http://target-agent:8080 --suites all
+    depends_on:
+      - target-agent
+    volumes:
+      - ./results:/app/results
+    environment:
+      - AGENTBECH_LOG_LEVEL=INFO
+
+  target-agent:
+    build:
+      context: .
+      dockerfile: Dockerfile.test-agent
+    ports:
+      - "8080:8080"
+
+  mcpscop:
+    image: carlos-projects/mcpscope:latest
+    ports:
+      - "9090:9090"
+    environment:
+      - MCPSCOPE_DB_PATH=/data/mcpscope.db
+    volumes:
+      - mcpscop-data:/data
+
+volumes:
+  mcpscop-data:

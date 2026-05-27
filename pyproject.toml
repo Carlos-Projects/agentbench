@@ -1,0 +1,94 @@
+[project]
+name = "agentbench"
+version = "0.2.0-dev"
+description = "Automated benchmarking framework for evaluating AI agent security"
+keywords = ["mcp", "security", "benchmark", "ai-security", "testing", "agent"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Information Technology",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Security",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+    "Topic :: Software Development :: Testing",
+]
+requires-python = ">=3.11"
+dependencies = [
+    "mcp>=1.0.0",
+    "typer>=0.12.0",
+    "rich>=13.0.0",
+    "httpx>=0.27.0",
+    "pydantic>=2.0.0",
+    "jinja2>=3.0.0",
+    "numpy>=1.24.0",
+    "plotly>=5.18.0",
+    "mcp-taxonomy>=0.1.0",
+    "pyyaml>=6.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0",
+    "pytest-asyncio>=0.24",
+    "pytest-httpx>=0.30",
+    "ruff>=0.7.0",
+    "mypy>=1.0.0",
+    "coverage>=7.0.0",
+    "uvicorn>=0.30.0",
+    "fastapi>=0.115.0",
+]
+
+[project.scripts]
+agentbench = "agentbench.cli:app"
+
+[project.urls]
+Homepage = "https://github.com/Carlos-Projects/agentbench"
+Repository = "https://github.com/Carlos-Projects/agentbench"
+Documentation = "https://agentbench.readthedocs.io"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/agentbench"]
+
+[tool.hatch.build.targets.sdist]
+include = ["src/agentbench/**"]
+
+[tool.mypy]
+python_version = "3.11"
+strict = false
+ignore_missing_imports = true
+warn_unused_ignores = true
+exclude = ["tests/"]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]
+markers = [
+    "slow: marks tests as slow",
+    "suite: marks tests as suite-level integration tests",
+    "scorer: marks tests for scoring engine",
+    "comparison: marks tests for comparison analysis",
+    "leaderboard: marks tests for leaderboard generation",
+    "reporter: marks tests for report generation",
+]
+
+[tool.ruff]
+target-version = "py311"
+line-length = 180
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "N", "W", "UP"]
+
+[tool.coverage.run]
+source = ["agentbench"]
+omit = ["tests/*"]
+
+[tool.coverage.report]
+fail_under = 80

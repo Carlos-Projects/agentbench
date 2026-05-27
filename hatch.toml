@@ -1,0 +1,20 @@
+[envs.default]
+dependencies = [
+    "pytest>=7.0",
+    "pytest-asyncio>=0.24",
+    "pytest-httpx>=0.30",
+    "ruff>=0.7.0",
+    "mypy>=1.0.0",
+    "coverage>=7.0.0",
+]
+
+[envs.default.scripts]
+test = "python -m pytest tests/ -v"
+test-cov = "coverage run -m pytest tests/ -v && coverage report"
+lint = "ruff check src/ tests/"
+typecheck = "mypy src/agentbench/ --ignore-missing-imports"
+build = "python -m build"
+all = ["lint", "typecheck", "test-cov"]
+
+[envs.default.env-vars]
+PYTHONPATH = "src"

@@ -1,0 +1,8 @@
+# Default owner
+* @Carlos-Projects
+
+# CI/CD configuration
+.github/workflows/* @Carlos-Projects
+
+# Project configuration
+pyproject.toml @Carlos-Projects
