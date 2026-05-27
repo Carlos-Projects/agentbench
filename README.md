@@ -208,10 +208,14 @@ coverage run -m pytest tests/ -v
 coverage report
 ```
 
-## License
+## Contributing
 
-MIT License - see [LICENSE](LICENSE).
+See [CONTRIBUTING.md](CONTRIBUTING.md) for development guidelines.
 
 ## Security
 
 See [SECURITY.md](SECURITY.md) for security policies and disclosure.
+
+## License
+
+MIT License - see [LICENSE](LICENSE).
