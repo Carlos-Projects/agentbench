@@ -1,6 +1,27 @@
 # Contributing to AgentBench
 
-We welcome contributions! This document outlines how to contribute.
+👋 **Welcome, and thank you for your interest in AgentBench!**
+
+We're building an automated benchmarking framework for AI agent security — and we need you. Whether you're fixing a bug, adding a benchmark suite, improving documentation, or just offering feedback, every contribution makes this project stronger.
+
+## First Time Contributor?
+
+Never contributed to AgentBench before? That's okay!
+
+- Check out issues tagged `good first issue`
+- Try running the existing benchmark suites and reporting edge cases
+- Add a new test for an existing suite
+- Improve the documentation or add a code comment where something was confusing
+
+We're here to help you succeed. Don't hesitate to ask for guidance.
+
+## Need Help?
+
+Questions or feedback?
+
+- Open a [GitHub Issue](https://github.com/Carlos-Projects/agentbench/issues)
+- Check if someone else had the same question first
+- Be descriptive: include your environment, what you tried, and what happened
 
 ## Development Setup
 
@@ -50,3 +71,7 @@ coverage report
 ## Security
 
 Found a vulnerability? See [SECURITY.md](SECURITY.md).
+
+---
+
+💡 This project is governed by a [Code of Conduct](CODE_OF_CONDUCT.md). By participating, you agree to uphold its principles.
