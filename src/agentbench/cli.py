@@ -79,7 +79,50 @@ def run(
     exclude_suites: str = typer.Option("", "--exclude-suites", "-x", help="Comma-separated suite names to exclude"),
     tags: str = typer.Option("", "--tags", help="Comma-separated tags to filter (e.g., 'injection,critical')"),
 ) -> None:
-    """Run benchmark suites against a target agent."""
+    """Run benchmark suites against a target agent.
+
+    Executes one or more benchmark suites against a target AI agent,
+    collects results, and generates reports in various formats.
+
+    Args:
+        target: Target agent URL.
+        suites: Comma-separated suite names or "all".
+        agent_id: Agent identifier.
+        agent_version: Agent version string.
+        output: Path to JSON report output file.
+        html: Path to HTML report output file.
+        markdown: Path to Markdown report output file.
+        timeout: Request timeout in seconds.
+        header: Additional HTTP headers.
+        api_format: API format (generic, openai, or mcp).
+        seed: Random seed for reproducibility.
+        config: Path to YAML configuration file.
+        rate_limit: Minimum delay between requests.
+        parallel: Number of parallel test executions.
+        exit_below: Exit if score falls below this threshold.
+        mcpguard: Output path for MCPGuard policy file.
+        mcpscop: Output path for MCPscop events file.
+        sarif: Output path for SARIF report file.
+        store: Whether to save results to the SQLite store.
+        db: SQLite database path.
+        plugin_dir: Directory containing custom plugins.
+        webhook: Completion webhook URL.
+        webhook_secret: Secret used for webhook authentication.
+        verbose: Enable verbose logging.
+        quiet: Enable quiet logging.
+        retry: Number of retries for failed requests.
+        log_format: Logging format.
+        dry_run: Show tests without executing them.
+        exclude_suites: Comma-separated suites to exclude.
+        tags: Comma-separated tag filters.
+
+    Returns:
+        None
+
+    Raises:
+        typer.Exit: If the benchmark score falls below the
+            configured threshold.
+    """
     import random
 
     from rich.progress import (
@@ -268,7 +311,24 @@ def init(
     target: str = typer.Option("http://localhost:8080", "--target", "-t", help="Default target URL"),
     force: bool = typer.Option(False, "--force", "-f", help="Overwrite existing files"),
 ) -> None:
-    """Scaffold a new AgentBench benchmark project."""
+    """Scaffold a new AgentBench benchmark project.
+
+    Creates a benchmark project directory with a default
+    configuration file and example custom suite template.
+
+    Args:
+        path: Directory where the benchmark project will be created.
+        target: Default target URL to include in the generated
+            configuration file.
+        force: Whether to overwrite existing files.
+
+    Returns:
+        None
+
+    Raises:
+        typer.Exit: If the configuration file already exists and
+            force is not enabled.
+    """
     from pathlib import Path as _Path
 
     dest = _Path(path)
@@ -345,8 +405,23 @@ class CustomSuite(BaseSuite):
 def validate(
     file: str = typer.Argument(..., help="Report JSON or config YAML file to validate"),
 ) -> None:
-    """Validate a benchmark report or config file."""
+    """Validate a benchmark report or configuration file.
 
+    Checks whether a benchmark report (JSON) or configuration
+    file (YAML) is valid and displays summary information when
+    validation succeeds.
+
+    Args:
+        file: Path to the report JSON or configuration YAML file
+            to validate.
+
+    Returns:
+        None
+
+    Raises:
+        typer.Exit: If the file does not exist, contains invalid
+            JSON or YAML, or has an unsupported file extension.
+    """
     path = Path(file)
     if not path.exists():
         rprint(f"[red]File not found: {file}[/red]")
@@ -389,7 +464,15 @@ def validate(
 
 @app.command()
 def info() -> None:
-    """Show system information and installed suite details."""
+    """Show system information and installed suite details.
+
+    Displays AgentBench version information, Python and platform
+    details, available benchmark suites, test case counts, and
+    supported output and API formats.
+
+    Returns:
+        None
+    """
     import platform
     import sys
 
@@ -424,7 +507,23 @@ def suite(
     list_suites: bool = typer.Option(False, "--list", "-l", help="List available suites"),
     show: str | None = typer.Option(None, "--show", "-s", help="Show test cases in a suite"),
 ) -> None:
-    """List and inspect benchmark suites."""
+    """List and inspect benchmark suites.
+
+    Displays available benchmark suites and their metadata, or
+    shows detailed information and test cases for a specific
+    suite.
+
+    Args:
+        list_suites: Whether to display all available benchmark
+            suites.
+        show: Name of a specific suite to inspect.
+
+    Returns:
+        None
+
+    Raises:
+        typer.Exit: If the requested suite does not exist.
+    """
     if list_suites:
         rprint("\n[bold]Available Benchmark Suites:[/bold]\n")
         for name in get_suite_names():
@@ -473,8 +572,20 @@ def compare(
     target: str = typer.Argument(..., help="Target JSON report file or store run ID"),
     db: str = typer.Option("agentbench.db", "--db", help="SQLite database path (for store comparisons)"),
 ) -> None:
-    """Compare two benchmark reports."""
+    """Compare two benchmark reports.
 
+    Loads two benchmark reports and analyzes differences in
+    security scores, regressions, and improvements between
+    the baseline and target results.
+
+    Args:
+        baseline: Baseline report file path or stored run ID.
+        target: Target report file path or stored run ID.
+        db: SQLite database path used when comparing stored runs.
+
+    Returns:
+        None
+    """
     baseline_report = _resolve_report_arg(baseline, db)
     target_report = _resolve_report_arg(target, db)
 
@@ -498,7 +609,20 @@ def leaderboard(
     output: str = typer.Option("leaderboard", "--output", "-o", help="Output directory"),
     markdown_output: str | None = typer.Option(None, "--markdown", "-m", help="Markdown output file"),
 ) -> None:
-    """Generate a leaderboard from multiple benchmark reports."""
+    """Generate a leaderboard from multiple benchmark reports.
+
+    Loads benchmark reports, generates ranked leaderboard
+    entries, and publishes leaderboard data in JSON and
+    optionally Markdown format.
+
+    Args:
+        reports: Paths to benchmark report JSON files.
+        output: Output directory for generated leaderboard files.
+        markdown_output: Optional Markdown output file name.
+
+    Returns:
+        None
+    """
     loaded_reports = [_load_report(r) for r in reports]
     generator = LeaderboardGenerator()
     entries = generator.generate(loaded_reports)
@@ -525,7 +649,21 @@ def report(
     markdown: str | None = typer.Option(None, "--markdown", "-m", help="Output Markdown file"),
     sarif: str | None = typer.Option(None, "--sarif", help="Output SARIF file"),
 ) -> None:
-    """Convert a benchmark report to different formats."""
+    """Convert a benchmark report to different output formats.
+
+    Loads a benchmark report and generates additional output
+    formats such as HTML, Markdown, or SARIF while displaying
+    the report summary in the console.
+
+    Args:
+        input_file: Path to the benchmark report JSON file.
+        html: Output path for the generated HTML report.
+        markdown: Output path for the generated Markdown report.
+        sarif: Output path for the generated SARIF report.
+
+    Returns:
+        None
+    """
     report_data = _load_report(input_file)
     console_reporter.print_report(report_data)
 
@@ -554,7 +692,28 @@ def trend(
     db: str = typer.Option("agentbench.db", "--db", help="SQLite database path"),
     from_store: bool = typer.Option(False, "--from-store", help="Load reports from SQLite store"),
 ) -> None:
-    """Analyze security trends from multiple benchmark reports."""
+    """Analyze security trends across benchmark reports.
+
+    Builds and displays historical performance trends from a
+    series of benchmark reports or stored benchmark runs,
+    including trend direction, volatility, moving averages,
+    and estimated future scores.
+
+    Args:
+        reports: Chronological benchmark report JSON files.
+        agent_id: Agent identifier used when loading reports
+            from the SQLite store.
+        db: Path to the SQLite database.
+        from_store: Whether to load historical runs from the
+            benchmark store instead of report files.
+
+    Returns:
+        None
+
+    Raises:
+        typer.Exit: If neither report files nor stored runs are
+            provided for analysis.
+    """
     from agentbench.store import BenchmarkStore
 
     if from_store:
@@ -620,7 +779,31 @@ def store(
     db: str = typer.Option("agentbench.db", "--db", help="SQLite database path"),
     keep: int = typer.Option(100, "--keep", help="Runs to keep (for clean)"),
 ) -> None:
-    """Manage historical benchmark results in a SQLite store."""
+    """Manage benchmark results stored in a SQLite database.
+
+    Provides commands for saving benchmark reports, listing
+    stored runs, retrieving run details, and cleaning up old
+    benchmark history from the local SQLite store.
+
+    Args:
+        command: Store operation to perform (save, list, get,
+            or clean).
+        report_file: Path to a benchmark report JSON file when
+            using the save command.
+        run_id: Identifier of the stored benchmark run to
+            retrieve.
+        agent_id: Agent identifier used to filter stored runs.
+        db: Path to the SQLite database file.
+        keep: Number of recent runs to retain when cleaning old
+            entries.
+
+    Returns:
+        None
+
+    Raises:
+        typer.Exit: If required arguments are missing for a
+            command or if an unsupported command is specified.
+    """
     from agentbench.store import BenchmarkStore
 
     store_inst = BenchmarkStore(db_path=db)
@@ -676,7 +859,25 @@ def export(
     mcpscop: str | None = typer.Option(None, "--mcpscop", help="Export MCPscop events JSON"),
     mcpscop_findings: str | None = typer.Option(None, "--mcpscop-findings", help="Export MCPscop findings JSON"),
 ) -> None:
-    """Export a benchmark report to various security tool formats."""
+    """Export a benchmark report to external security tool formats.
+
+    Converts a benchmark report into formats supported by
+    security analysis and compliance tools, including SARIF,
+    MCPGuard policies, and MCPscop event and findings exports.
+
+    Args:
+        report_file: Path to the benchmark report JSON file.
+        sarif: Output path for the generated SARIF report.
+        mcpguard: Output path for the generated MCPGuard policy
+            YAML file.
+        mcpscop: Output path for the generated MCPscop events
+            JSON file.
+        mcpscop_findings: Output path for the generated MCPscop
+            findings JSON file.
+
+    Returns:
+        None
+    """
     report_data = _load_report(report_file)
 
     if sarif:
@@ -714,7 +915,29 @@ def config(
     target: str | None = typer.Option(None, "--target", "-t", help="Set target URL"),
     agent_id: str | None = typer.Option(None, "--agent-id", "-a", help="Set agent ID"),
 ) -> None:
-    """Manage benchmark configuration files."""
+    """Manage benchmark configuration files.
+
+    Displays, creates, and validates AgentBench configuration
+    files used to define benchmark settings, target endpoints,
+    and agent metadata.
+
+    Args:
+        action: Configuration operation to perform (show,
+            create, or validate).
+        file: Path to the configuration file.
+        target: Target URL to include when creating a new
+            configuration file.
+        agent_id: Agent identifier to include when creating a
+            new configuration file.
+
+    Returns:
+        None
+
+    Raises:
+        typer.Exit: If the configuration file is missing,
+            already exists when creating a new file, or an
+            unsupported action is specified.
+    """
     path = Path(file)
 
     if action == "show":
@@ -760,7 +983,20 @@ def merge(
     output: str = typer.Option("merged.json", "--output", "-o", help="Output JSON file"),
     label: str = typer.Option("merged", "--label", "-l", help="Agent ID for merged report"),
 ) -> None:
-    """Merge multiple benchmark report files into one composite report."""
+    """Merge multiple benchmark reports into a single report.
+
+    Combines benchmark results from multiple report files into
+    a consolidated report containing aggregated scores, test
+    results, and category metrics.
+
+    Args:
+        files: Paths to benchmark report JSON files to merge.
+        output: Path for the generated merged report file.
+        label: Agent identifier assigned to the merged report.
+
+    Returns:
+        None
+    """
     from agentbench.models import ScoreCategory
     from agentbench.reporters.json import JSONReporter
 
@@ -812,13 +1048,34 @@ def merge(
 def completion(
     shell: str = typer.Argument("bash", help="Shell type: bash, zsh, fish, powershell"),
 ) -> None:
-    """Generate shell completion script."""
+    """Generate a shell completion script.
+
+    Displays instructions for enabling command-line tab
+    completion for the specified shell environment.
+
+    Args:
+        shell: Shell type for which completion instructions
+            should be generated.
+
+    Returns:
+        None
+    """
     rprint(f"# Add this to your {shell}rc:")
     rprint(f"  _AGENTBENCH_COMPLETE=source_{shell} agentbench")
     rprint("# Or run: agentbench --install-completion")
 
 
 async def _send_webhook(url: str, secret: str, report: ScoreReport) -> None:
+    """Send a benchmark completion notification to a webhook URL.
+
+    Args:
+        url: Webhook endpoint URL.
+        secret: Secret token for webhook authentication.
+        report: Completed benchmark report to send.
+
+    Returns:
+        None
+    """
     from agentbench.webhooks import WebhookNotifier
 
     notifier = WebhookNotifier(url=url, secret=secret)
@@ -826,6 +1083,19 @@ async def _send_webhook(url: str, secret: str, report: ScoreReport) -> None:
 
 
 def _send_webhook_sync(url: str, secret: str, report: ScoreReport) -> None:
+    """Send a benchmark completion notification synchronously.
+
+    Falls back to a synchronous HTTP POST when an async event
+    loop is unavailable.
+
+    Args:
+        url: Webhook endpoint URL.
+        secret: Secret token for webhook authentication.
+        report: Completed benchmark report to send.
+
+    Returns:
+        None
+    """
     import httpx
 
     try:
@@ -854,6 +1124,9 @@ def _validate_target(url: str, api_format: str, timeout: float) -> None:
         url: Target URL.
         api_format: API format to validate support for.
         timeout: Request timeout in seconds.
+
+    Returns:
+        None
     """
     import asyncio as _asyncio
 
@@ -907,6 +1180,18 @@ def _resolve_report_arg(arg: str, db_path: str = "agentbench.db") -> ScoreReport
 
 
 def _load_config(filepath: str) -> dict[str, Any]:
+    """Load and parse a YAML configuration file.
+
+    Args:
+        filepath: Path to the YAML configuration file.
+
+    Returns:
+        Parsed configuration as a dictionary.
+
+    Raises:
+        typer.Exit: If the file is not found or exceeds the
+            maximum allowed size.
+    """
     import yaml
 
     from agentbench.utils.security import validate_file_size
@@ -925,6 +1210,19 @@ def _load_config(filepath: str) -> dict[str, Any]:
 
 
 def _resolve_suites(suites_param: str) -> list[type]:
+    """Resolve a suite parameter string to a list of suite classes.
+
+    Args:
+        suites_param: Comma-separated suite names or ``"all"`` to
+            select every registered suite.
+
+    Returns:
+        List of suite class types matching the requested names.
+
+    Raises:
+        typer.Exit: If any requested suite name is not found in
+            the registry.
+    """
     if suites_param == "all":
         return [SUITE_REGISTRY[name] for name in get_suite_names()]
     names = [s.strip() for s in suites_param.split(",")]
@@ -939,6 +1237,14 @@ def _resolve_suites(suites_param: str) -> list[type]:
 
 
 def _parse_headers(headers: list[str]) -> dict[str, str]:
+    """Parse and validate a list of raw HTTP header strings.
+
+    Args:
+        headers: List of header strings in ``"Key: Value"`` format.
+
+    Returns:
+        Dictionary mapping validated header names to their values.
+    """
     from agentbench.utils.security import validate_header_value
 
     result: dict[str, str] = {}
@@ -956,6 +1262,18 @@ def _parse_headers(headers: list[str]) -> dict[str, str]:
 
 
 def _load_report(filepath: str) -> ScoreReport:
+    """Load and deserialize a benchmark report from a JSON file.
+
+    Args:
+        filepath: Path to the benchmark report JSON file.
+
+    Returns:
+        Deserialized ScoreReport instance.
+
+    Raises:
+        typer.Exit: If the file is not found or exceeds the
+            maximum allowed size.
+    """
     from agentbench.models import BenchmarkResult, BenchmarkTestCase, TestStatus
     from agentbench.utils.security import validate_file_size
 
