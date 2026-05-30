@@ -5,6 +5,7 @@
 [![Ruff](https://img.shields.io/badge/code%20style-ruff-000000.svg)](https://github.com/astral-sh/ruff)
 [![Python 3.11+](https://img.shields.io/badge/python-3.11+-blue.svg)](https://python.org)
 [![Coverage](https://img.shields.io/badge/coverage-86%25-brightgreen.svg)](https://github.com/Carlos-Projects/agentbench/actions)
+[![Star History](https://img.shields.io/badge/Star-History-blue?style=social)](https://api.star-history.com/svg?repos=Carlos-Projects/agentbench&type=Date)
 
 Automated benchmarking framework for evaluating AI agent security.
 
