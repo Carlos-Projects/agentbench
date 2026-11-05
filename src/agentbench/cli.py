@@ -49,7 +49,7 @@ def main(
 @app.command()
 def run(
     target: str = typer.Argument(..., help="Target agent URL"),
-    suites: str = typer.Option("all", "--suites", "-s", help="Comma-separated suite names or 'all'"),
+    suites: str = typer.Option("all", "--suites", "--suite", "-s", help="Comma-separated suite names or 'all'"),
     agent_id: str = typer.Option("unknown", "--agent-id", "-a", help="Agent identifier"),
     agent_version: str = typer.Option("", "--agent-version", "-v", help="Agent version"),
     output: str | None = typer.Option(None, "--output", "-o", help="Output report file (JSON)"),

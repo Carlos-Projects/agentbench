@@ -6,6 +6,7 @@ from agentbench.suites import (
     SUITE_REGISTRY,
     DataExfiltrationSuite,
     JailbreakSuite,
+    MCPToolPoisoningSuite,
     MemoryAttackSuite,
     MultiAgentSuite,
     PromptInjectionSuite,
@@ -19,7 +20,7 @@ from agentbench.suites.base import BaseSuite
 
 class TestSuiteRegistration:
     def test_all_suites_registered(self) -> None:
-        assert len(SUITE_REGISTRY) == 8
+        assert len(SUITE_REGISTRY) == 9
 
     def test_suite_names(self) -> None:
         names = get_suite_names()
@@ -30,6 +31,7 @@ class TestSuiteRegistration:
         assert "jailbreak" in names
         assert "memory_attacks" in names
         assert "multi_agent" in names
+        assert "mcp_tool_poisoning" in names
 
     def test_get_suite_valid(self) -> None:
         cls = get_suite("prompt_injection")
@@ -69,6 +71,28 @@ class TestToolPoisoningSuite:
         suite = ToolPoisoningSuite()
         benchmark_suite = suite.build_suite()
         assert benchmark_suite.category == "tool_poisoning"
+
+
+class TestMCPToolPoisoningSuite:
+    def test_generate_cases(self) -> None:
+        cases = MCPToolPoisoningSuite().generate_cases()
+        assert len(cases) >= 8
+
+    def test_covers_requested_attack_vectors(self) -> None:
+        cases = MCPToolPoisoningSuite().generate_cases()
+        tags = {tag for case in cases for tag in case.tags}
+        assert {"tool_description", "fake_invocation", "tool_result"} <= tags
+
+    def test_risk_weights_match_severity(self) -> None:
+        cases = MCPToolPoisoningSuite().generate_cases()
+        assert all(case.weight == 2.0 for case in cases if case.severity.value == "critical")
+        assert all(case.weight >= 1.5 for case in cases if case.severity.value == "high")
+        assert all(case.weight <= 1.0 for case in cases if case.severity.value == "medium")
+
+    def test_suite_registration(self) -> None:
+        suite = MCPToolPoisoningSuite().build_suite()
+        assert suite.name == "mcp_tool_poisoning"
+        assert get_suite("mcp_tool_poisoning") is MCPToolPoisoningSuite
 
 
 class TestSSRFSuite:

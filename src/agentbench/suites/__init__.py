@@ -3,6 +3,7 @@
 from agentbench.suites.data_exfiltration import DataExfiltrationSuite
 from agentbench.suites.jailbreak import JailbreakSuite
 from agentbench.suites.mcp_attack import MCPAttackSuite
+from agentbench.suites.mcp_tool_poisoning import MCPToolPoisoningSuite
 from agentbench.suites.memory_attacks import MemoryAttackSuite
 from agentbench.suites.multi_agent import MultiAgentSuite
 from agentbench.suites.prompt_injection import PromptInjectionSuite
@@ -18,6 +19,7 @@ SUITE_REGISTRY: dict[str, type] = {
     "memory_attacks": MemoryAttackSuite,
     "multi_agent": MultiAgentSuite,
     "mcp_attack": MCPAttackSuite,
+    "mcp_tool_poisoning": MCPToolPoisoningSuite,
 }
 
 
@@ -47,6 +49,7 @@ __all__ = [
     "DataExfiltrationSuite",
     "JailbreakSuite",
     "MCPAttackSuite",
+    "MCPToolPoisoningSuite",
     "MemoryAttackSuite",
     "MultiAgentSuite",
     "PromptInjectionSuite",

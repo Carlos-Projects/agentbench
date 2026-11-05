@@ -90,6 +90,15 @@ class TestCLI:
         result = runner.invoke(app, ["run"])
         assert result.exit_code != 0
 
+    def test_run_mcp_tool_poisoning_suite_alias(self) -> None:
+        result = runner.invoke(
+            app,
+            ["run", "http://invalid:1", "--suite", "mcp_tool_poisoning", "--dry-run"],
+        )
+        assert result.exit_code == 0
+        assert "mcp_tool_poisoning" in result.stdout
+        assert "mctp-001" in result.stdout
+
     def test_run_invalid_target(self) -> None:
         result = runner.invoke(app, ["run", "http://invalid:1", "--suites", "prompt_injection"])
         assert result.exit_code == 0
